@@ -12,6 +12,7 @@ namespace MSA.EventPlatform.API.Controllers
     [ApiController]
     public class EventsController(IMediator mediator) : ControllerBase
     {
+        // GET	/api/events
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetAllEvents()
         {
@@ -19,12 +20,14 @@ namespace MSA.EventPlatform.API.Controllers
             return Ok(events);
         }
 
+        // GET	/api/events/{eventId}
         [HttpGet("{eventId:long}")]
         public async Task<ActionResult<EventDto>> GetEventById(long eventId)
         {
             return await mediator.Send(new GetEventByIdQuery(eventId));
         }
 
+        // POST	/api/events
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<long>> CreateEvent(CreateEventCommand command)
@@ -35,6 +38,7 @@ namespace MSA.EventPlatform.API.Controllers
             return CreatedAtAction(nameof(GetEventById), new { eventId }, eventId);
         }
 
+        // PUT	/api/events/{eventId}
         [Authorize]
         [HttpPut("{eventId:long}")]
         public async Task<IActionResult> UpdateEvent([FromRoute] long eventId, [FromBody] UpdateEventCommand command)
@@ -47,6 +51,7 @@ namespace MSA.EventPlatform.API.Controllers
             return NoContent();
         }
 
+        // DELETE	/api/events/{eventId}
         [Authorize]
         [HttpDelete("{eventId:long}")]
         public async Task<IActionResult> DeleteEvent(long eventId)
@@ -55,6 +60,7 @@ namespace MSA.EventPlatform.API.Controllers
             return NoContent();
         }
 
+        // POST	/api/events/{eventId}/register
         [Authorize]
         [HttpPost("{eventId:long}/register")]
         public async Task<IActionResult> RegisterToEvent([FromRoute] long eventId)
@@ -64,6 +70,7 @@ namespace MSA.EventPlatform.API.Controllers
             return Ok();
         }
 
+        // DELETE	/api/events/{eventId}/register
         [Authorize]
         [HttpDelete("{eventId:long}/register")]
         public async Task<IActionResult> CancelRegistration([FromRoute] long eventId)
@@ -73,6 +80,7 @@ namespace MSA.EventPlatform.API.Controllers
             return NoContent();
         }
 
+        // GET	/api/events/{eventId}/participants
         [Authorize]
         [HttpGet("{eventId:long}/participants")]
         public async Task<ActionResult<IEnumerable<EventRegistrationDto>>> GetEventParticipants([FromRoute] long eventId)
